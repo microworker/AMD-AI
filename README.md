@@ -5,4 +5,4 @@ AMD AI relevant doc and configuration
 CPU: 7950X  
 GPU: 7900XTX  
 RAM: 32GB  
-OS: Win11
+OS: Win11 / WSL  
