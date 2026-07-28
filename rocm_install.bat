@@ -2,12 +2,16 @@
 setlocal enabledelayedexpansion
 
 :: This script must be placed in the root directory of the ComfyUI.
-:: ComfyUI-INT8-Fast-ROCM: 
-:: CFZ-Caching: 
-:: ComfyUI-HFRemoteVae: 
-:: CFZ-SwitchMenu: 
-:: sage-attention is faster in image/video but some workflows may be black. fast-attention is better at llvm.
-
+:: ComfyUI-INT8-Fast-ROCM: quantized and load and use the int4(krea2 models is ok and partial Lora support. ltxvideo error)/int8 models
+:: CFZ-Caching: save/load conditioning -> Cache your CLIP text encoder output to disk and reload it in future runs - skipping re-encoding entirely.
+::: Note: Does not work with models that require VAE input in CLIP text (e.g. qwen-image-edit).
+::: nodes: CFZ Save Conditioning, Connect to a CLIP Text Encode node to save conditioning to disk. CFZ Load Conditioning, Load previously saved conditioning by name
+::: CUDNN, Simple node to enable or disable MIOpen and its benchmark mode.
+::: CUDNN Advanced and MIOpen Nodes
+:: ComfyUI-HFRemoteVae: This node allows using Hugginface remote server for latent decoding.
+:: CFZ-SwitchMenu: switch menu types between old and new menus
+:: https://github.com/Starnodes2024/comfyui-starnodes-modelconverter , Ultimate Model Converter for ComfyUI using comfyui-kitchen - Convert between Transformers, FP32, FP16, FP8. INT8, NVFP4, INT8 Comvrot
+:: sage-attention is faster in image/video but some workflows may be black. fast-attention is better at llvm. SpargeAttn?
 
 :: Check python env
 python --version
@@ -26,15 +30,6 @@ python -m pip install "torch[device-!arch!]" "torchvision[device-!arch!]" torcha
 if errorlevel 1 goto :install_failed
 
 :: Install popular 3rd-extensions
-::: CFZ-SwitchMenu, switch menu types between old and new menus
-::: CFZ-Caching, save/load conditioning -> Cache your CLIP text encoder output to disk and reload it in future runs - skipping re-encoding entirely.
-:::: Note: Does not work with models that require VAE input in CLIP text (e.g. qwen-image-edit).
-:::: nodes: CFZ Save Conditioning, Connect to a CLIP Text Encode node to save conditioning to disk. CFZ Load Conditioning, Load previously saved conditioning by name
-:::: CUDNN, Simple node to enable or disable MIOpen and its benchmark mode.
-:::: CUDNN Advanced and MIOpen Nodes
-::: ComfyUI-HFRemoteVae, This node allows using Hugginface remote server for latent decoding.
-::: ComfyUI-INT8-Fast-ROCM, quantized and load and use the int4(krea2 models is ok and partial Lora support. ltxvideo error)/int8 models
-::: https://github.com/Starnodes2024/comfyui-starnodes-modelconverter , Ultimate Model Converter for ComfyUI using comfyui-kitchen - Convert between Transformers, FP32, FP16, FP8. INT8, NVFP4, INT8 Comvrot
 cd custom_nodes
 if not exist comfyui-manager git clone https://github.com/Comfy-Org/ComfyUI-Manager
 if not exist CFZ-SwitchMenu git clone https://github.com/patientx/CFZ-SwitchMenu.git
@@ -60,6 +55,9 @@ del python_env\Lib\site-packages\sageattention\attn_qk_int8_per_block_causal.py
 curl -sL -o python_env\Lib\site-packages\sageattention\attn_qk_int8_per_block_causal.py https://raw.githubusercontent.com/patientx/ComfyUI-Zluda/refs/heads/master/comfy/customzluda/sa/attn_qk_int8_per_block_causal.py
 del python_env\Lib\site-packages\sageattention\quant_per_block.py
 curl -sL -o python_env\Lib\site-packages\sageattention\quant_per_block.py https://raw.githubusercontent.com/patientx/ComfyUI-Zluda/refs/heads/master/comfy/customzluda/sa/quant_per_block.py
+
+:: Install SpargeAttn
+::: https://github.com/jammm/SpargeAttn
 
 :: Install bitsandbytes
 python -m pip install https://github.com/0xDELUXA/bitsandbytes_win_rocm/releases/download/0.50.0.dev0-py3.12-rocm7.15-win_amd64_all/bitsandbytes-0.50.0.dev0-cp312-cp312-win_amd64.whl
