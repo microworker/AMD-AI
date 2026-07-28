@@ -1,0 +1,75 @@
+# ROCm 7.14.0
+# WSL2
+# Ubuntu 24.04
+# 7900XTX
+
+# Reference
+|- https://rocm.docs.amd.com/en/latest/install/rocm.html?fam=radeon&w=compute&os=wsl&gpu=rx-7900-xtx&gfx=gfx1100&ubuntu-ver=24.04&i=pkgman
+
+# Prerequisites
+|| ## Install WSL2 and Ubuntu 24.04
+|-- TODO
+|| ## Install additional packages (To build the ROCDXG library for WSL2, you’ll need GCC 11.4 or later and CMake 3.15 or later.)
+|-- sudo apt install libatomic1 libquadmath0 gcc g++ cmake
+|| ## Configure permissions for GPU access, two methods
+|-- 1. group membership
+|--- # Add the current user to the render and video groups
+|--- sudo usermod -a -G render,video $LOGNAME
+|-- 2. udev rules
+|--- # udev rules are a flexible, system-wide approach for managing device permissions, eliminating the need for user group management while allowing granular GPU access. To enable them and grant GPU access to all users, run the following command:
+|--- sudo tee /etc/udev/rules.d/70-amdgpu.rules << EOF
+KERNEL=="kfd", GROUP="render", MODE="0666"
+SUBSYSTEM=="drm", KERNEL=="renderD*", GROUP="render", MODE="0666"
+EOF
+|--- sudo udevadm control --reload-rules
+|--- sudo udevadm trigger
+|- Note: To apply all settings, reboot your system.
+
+# Installation
+|| ## Install AMD Software: Adrenalin Edition
+|-- For details and the download link, see https://www.amd.com/en/resources/support-articles/release-notes/RN-RAD-WIN-26-6-4.html#Downloads.
+|| ## Install ROCm
+||| ### Register ROCm repositories
+|--- Register the ROCm repository with your system’s package manager. This lets you install and update ROCm packages using apt.
+|--- # Download and install GPG key
+|--- sudo mkdir --parents --mode=0755 /etc/apt/keyrings
+|--- # ROCm release signing key
+|--- wget https://repo.amd.com/rocm/packages-multi-arch/gpg/rocm.gpg -O - | \
+    gpg --dearmor | sudo tee /etc/apt/keyrings/amdrocm.gpg > /dev/null
+|--- sudo tee /etc/apt/sources.list.d/rocm.list << EOF
+deb [arch=amd64 signed-by=/etc/apt/keyrings/amdrocm.gpg] https://repo.amd.com/rocm/packages-multi-arch/ubuntu2404 stable main
+EOF
+|--- sudo apt update
+||| ### Install ROCm packages
+|--- Use apt to install the core ROCm packages. See ROCm meta packages for additional installation options.
+|--- sudo apt install amdrocm7.14-gfx1100
+||| ### Install ROCDXG and AMD SMI for WSL
+|||| #### Package manager
+|---- 1. Download and install ROCDXG Library.
+|----- wget https://github.com/ROCm/librocdxg/releases/download/v1.2.1/rocdxg-roct_1.2.1_amd64.deb
+|----- sudo apt install ./rocdxg-roct_1.2.1_amd64.deb
+|---- 2. Download and install AMD SMI Library for WSL.
+|----- sudo apt install python3-pip python3-wheel python3-argcomplete
+|----- wget https://github.com/ROCm/librocdxg/releases/download/v1.2.1/rocdxg-amd-smi-lib_1.2.1_amd64.deb
+|----- sudo apt install ./rocdxg-amd-smi-lib_1.2.1_amd64.deb
+|----- source /etc/profile.d/rocdxg-amd-smi-lib.sh
+|||| #### Build from source
+|| ## Install Pytorch
+|-- TODO
+
+# Post-installation
+|- After installing ROCm 7.14.0, complete these post-installation steps to complete your system configuration and validate the installation.
+|| ## Verify your installation
+|-- Use rocminfo to verify that ROCm is correctly installed and that your AMD devices are visible to the system.
+|-- rocminfo
+
+# Uninstalling
+|- 1. Use your package manager to remove the installed packages.
+|-- sudo apt autoremove amdrocm7.14-gfx110x
+|- 2. Remove ROCm repositories.
+|-- # Remove ROCm repositories
+|-- sudo rm /etc/apt/sources.list.d/rocm.list
+|-- # Clear the cache and clean the system
+|-- sudo rm -rf /var/cache/apt/*
+|-- sudo apt clean all
+|-- sudo apt update
