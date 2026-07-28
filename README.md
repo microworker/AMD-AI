@@ -1,5 +1,5 @@
-# AMD-AI
-AMD AI relevant doc and configuration
+# ROCm & ComfyUI for 7900xtx
+relevant doc and configuration
 
 # Hardware
 CPU: 7950X  
