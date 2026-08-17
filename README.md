@@ -6,8 +6,8 @@ CPU: 7950X
 GPU: 7900XTX  
 RAM: 32GB  
 OS: Win11 / WSL  
+Python: 3.12  
 
 # Updata ROCm & PyTorch (nightly)
-pip install --index-url https://rocm.nightlies.amd.com/whl-multi-arch/ "rocm[libraries,device-gfx1100]==10.1.0a20260813"  
-pip install --index-url https://rocm.nightlies.amd.com/whl-multi-arch/ "torch[device-gfx1100]" "torchvision[device-gfx1100]" torchaudio "rocm-sdk==10.1.0a20260813"  
-Note: find the version you want on https://therock-hud.amd.com/#multi-arch-release  
+pip install --index-url https://rocm.nightlies.amd.com/whl-multi-arch/ "torch[device-gfx1100]==2.11.0+rocm10.1.0a20260815" "torchvision[device-gfx1100]==0.26.0+rocm10.1.0a20260815" "torchaudio==2.11.0+rocm10.1.0a20260815"  
+Note: find the latest compiled software that has been approved on https://therock-hud.amd.com/#multi-arch-release  
