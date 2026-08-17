@@ -17,7 +17,7 @@ INT8 ConvRot (best quality-speed balance) > w4a8 (more extreme speed & VRAM savi
 Note: w4a8 is my favorite
 
 # Video resolution
-480P is my favor. (832x480, 864x480)
+480P is my favor. (832x480, 864x480)  
 Note: 480x320 for test
 
 # Issues
