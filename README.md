@@ -1,6 +1,11 @@
 # ROCm & ComfyUI for 7900xtx
 ComfyUI usage and debugging experience on Win or WSL
 
+# News
+1. --use-ck-attention is supported, as fast as flash-attn  
+2. --enable-dynamic-vram is supported, better vram management  
+3. According to forum feedback, rocm10.* has improved by ~40%
+
 # Hardware
 CPU: 7950X  
 GPU: 7900XTX  
