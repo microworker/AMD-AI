@@ -5,6 +5,7 @@ ComfyUI usage and debugging experience on Win or WSL
 1. --use-ck-attention is supported, as fast as flash-attn  
 2. --enable-dynamic-vram is supported, better vram management  
 3. According to forum feedback, rocm10.* has improved by ~40%
+4. sageattention-2.2.0 is supported
 
 # Hardware
 CPU: 7950X  
