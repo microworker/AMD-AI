@@ -2,8 +2,8 @@
 ComfyUI usage and debugging experience on Win or WSL
 
 # News
-1. --use-ck-attention is supported, as fast as flash-attn  
-2. --enable-dynamic-vram is supported, better vram management  
+1. --use-ck-attention is supported, as fast as flash-attn(RDNA4 only)  
+2. --enable-dynamic-vram is supported, better vram management( the latest ComfyUI enabled by default, --disable-dynamic-vram needed)  
 3. According to forum feedback, rocm10.* has improved by ~40%
 4. sageattention-2.2.0 is supported
 
